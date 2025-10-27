@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Ingeniero i-Fix - Reparación de Celulares</title>
+    
+    <!-- Fuente Poppins desde Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Enlace a nuestro archivo CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header fijo con navegación -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <h2>El Ingeniero i-Fix</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#inicio" class="nav-link">Inicio</a></li>
+                <li><a href="#mision" class="nav-link">Misión</a></li>
+                <li><a href="#servicios" class="nav-link">Servicios</a></li>
+                <li><a href="#proyectos" class="nav-link">Proyectos</a></li>
+                <li><a href="#catalogo" class="nav-link">Catálogo</a></li>
+                <li><a href="#contacto" class="nav-link">Contacto</a></li>
+            </ul>
+            <!-- Ícono del carrito -->
+            <div class="cart-icon" id="cartIcon">
+                <span class="cart-count" id="cartCount">0</span>
+                🛒
+            </div>
+            <!-- Botón hamburguesa para móviles -->
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Sección Principal - Inicio -->
+    <section id="inicio" class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>El Ingeniero i-Fix</h1>
+                <p class="hero-subtitle">Tu celular en manos de un ingeniero</p>
+                <p class="hero-description">
+                    Más de 10 años de experiencia en telefonía, especializados en reparación y venta de celulares de todas las marcas, con enfoque especial en productos Apple.
+                </p>
+                <div class="hero-info">
+                    <div class="info-item">
+                        <span class="info-label">📍 Ubicación:</span>
+                        <span>Calle 9 # 4-22, Centro Comercial El Palacio, Local 95, Cúcuta</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">🕒 Horario:</span>
+                        <span>Lun-Sáb: 8:00 AM - 6:00 PM | Dom: 9:00 AM - 1:00 PM</span>
+                    </div>
+                </div>
+                <a href="#contacto" class="btn-primary">Contáctanos</a>
+            </div>
+            <div class="hero-image">
+                <img src="https://res.cloudinary.com/dakyc9jir/image/upload/v1761539026/El_ingeniero_iFix_x7thvy.png" alt="El Ingeniero i-Fix - Especialista en reparación de celulares">
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Misión -->
+    <section id="mision" class="mission">
+        <div class="container">
+            <div class="section-header">
+                <h2>Nuestra Misión</h2>
+                <p>Comprometidos con la excelencia técnica y el servicio al cliente</p>
+            </div>
+            <div class="mission-content">
+                <div class="mission-text">
+                    <p>
+                        En El Ingeniero i-Fix, brindamos soluciones integrales en venta, mantenimiento y reparación de dispositivos móviles de todas las marcas, con especialización en productos Apple. Nos comprometemos a ofrecer un servicio técnico confiable, rápido y de alta calidad, respaldado por más de 10 años de experiencia en telefonía.
+                    </p>
+                    <p>
+                        Buscamos que cada cliente reciba atención personalizada, asesoría profesional y la tranquilidad de saber que su equipo está en manos expertas.
+                    </p>
+                </div>
+                <div class="mission-visual">
+                    <div class="stats">
+                        <div class="stat-item">
+                            <h3>10+</h3>
+                            <p>Años de experiencia</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>1+</h3>
+                            <p>Año especializado en iPhone</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>100%</h3>
+                            <p>Compromiso con la calidad</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Visión -->
+    <section id="vision" class="vision">
+        <div class="container">
+            <div class="section-header">
+                <h2>Nuestra Visión</h2>
+                <p>Liderando el futuro de la reparación móvil en Cúcuta</p>
+            </div>
+            <div class="vision-content">
+                <p>
+                    Ser la empresa líder en reparación y venta de celulares en Cúcuta y la región, reconocida por nuestra excelencia técnica, honestidad y atención al cliente. Aspiramos a consolidarnos como un centro de confianza para usuarios de iPhone y Android, ampliando nuestros servicios con innovación tecnológica y estándares de calidad que nos distingan a nivel nacional.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Servicios/Experiencia -->
+    <section id="servicios" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Nuestros Servicios</h2>
+                <p>Experiencia técnica especializada para todas las marcas</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">📱</div>
+                    <h3>Reparación de Pantallas</h3>
+                    <p>Cambio y reparación de pantallas para todas las marcas de celulares, con garantía de calidad.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🔧</div>
+                    <h3>Reparación de Placas</h3>
+                    <p>Diagnóstico y reparación de placas madre con tecnología avanzada y componentes originales.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🍎</div>
+                    <h3>Especialización iPhone</h3>
+                    <p>Servicio técnico especializado en productos Apple con herramientas certificadas.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">⚡</div>
+                    <h3>Servicio Express</h3>
+                    <p>Reparaciones rápidas para emergencias con tiempos de entrega optimizados.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🛒</div>
+                    <h3>Venta de Accesorios</h3>
+                    <p>Amplia gama de accesorios originales y compatibles para todas las marcas.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🔍</div>
+                    <h3>Diagnóstico Técnico</h3>
+                    <p>Evaluación profesional gratuita para identificar problemas y soluciones.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Proyectos -->
+    <section id="proyectos" class="projects">
+        <div class="container">
+            <div class="section-header">
+                <h2>Proyectos Destacados</h2>
+                <p>Casos de éxito y trabajos realizados</p>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://res.cloudinary.com/dakyc9jir/image/upload/v1761538101/iPhone_15_pro_max_ysn49j.jpg" alt="Proyecto iPhone 15 Pro Max">
+                    </div>
+                    <div class="project-content">
+                        <h3>Reparación iPhone 15 Pro Max Apagado</h3>
+                        <p>Reparación completa de iPhone 15 Pro Max que no encendía, con diagnóstico técnico especializado y componentes originales Apple.</p>
+                        <button class="btn-secondary" onclick="window.open('https://youtube.com/shorts/OcVsuDtwIYE', '_blank')">Ver más</button>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://res.cloudinary.com/dakyc9jir/image/upload/v1761537979/iPhone_13_encuwk.jpg" alt="Proyecto iPhone 13">
+                    </div>
+                    <div class="project-content">
+                        <h3>Cambio de Batería iPhone 13</h3>
+                        <p>Cambio completo de batería en iPhone 13 con componente original Apple y garantía de calidad.</p>
+                        <button class="btn-secondary" onclick="window.open('https://youtu.be/smxt7Pbawfo', '_blank')">Ver más</button>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://res.cloudinary.com/dakyc9jir/image/upload/v1761538082/iphone_11_4_wwwn3f.jpg" alt="Proyecto iPhone 11">
+                    </div>
+                    <div class="project-content">
+                        <h3>Reparación iPhone 11</h3>
+                        <p>Reparación especializada de iPhone 11 con diagnóstico técnico completo y componentes originales.</p>
+                        <button class="btn-secondary" onclick="window.open('https://youtube.com/shorts/GWH7JRNM0W0', '_blank')">Ver más</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Catálogo -->
+    <section id="catalogo" class="catalog">
+        <div class="container">
+            <div class="section-header">
+                <h2>Catálogo de Productos</h2>
+                <p>Encuentra los mejores celulares iPhone y accesorios originales</p>
+            </div>
+            
+            <!-- Pestañas de categorías -->
+            <div class="catalog-tabs">
+                <button class="tab-btn active" data-category="celulares">📱 Celulares iPhone</button>
+                <button class="tab-btn" data-category="accesorios">🔌 Accesorios</button>
+            </div>
+            
+            <!-- Catálogo de Celulares -->
+            <div class="catalog-content" id="celulares">
+                <div class="products-grid">
+                    <div class="product-card" data-product="iphone-15-pro-max">
+                        <div class="product-image">
+                            <img src="https://res.cloudinary.com/dakyc9jir/image/upload/v1761538101/iPhone_15_pro_max_ysn49j.jpg" alt="iPhone 15 Pro Max">
+                        </div>
+                        <div class="product-info">
+                            <h3>iPhone 15 Pro Max</h3>
+                            <p class="product-ref">Ref: IP15PM-256GB</p>
+                            <div class="product-features">
+                                <span>📱 Pantalla 6.7"</span>
+                                <span>💾 256GB</span>
+                                <span>📷 Cámara 48MP</span>
+                                <span>🎨 Color Natural Titanio</span>
+                            </div>
+                            <div class="product-price">$4,500,000</div>
+                            <button class="btn-add-cart" onclick="addToCart('iphone-15-pro-max', 'iPhone 15 Pro Max', 4500000)">Agregar al carrito</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card" data-product="iphone-14-pro">
+                        <div class="product-image">
+                            <img src="https://res.cloudinary.com/dakyc9jir/image/upload/v1761537979/iPhone_13_encuwk.jpg" alt="iPhone 14 Pro">
+                        </div>
+                        <div class="product-info">
+                            <h3>iPhone 14 Pro</h3>
+                            <p class="product-ref">Ref: IP14P-128GB</p>
+                            <div class="product-features">
+                                <span>📱 Pantalla 6.1"</span>
+                                <span>💾 128GB</span>
+                                <span>📷 Cámara 48MP</span>
+                                <span>🎨 Color Morado Profundo</span>
+                            </div>
+                            <div class="product-price">$3,200,000</div>
+                            <button class="btn-add-cart" onclick="addToCart('iphone-14-pro', 'iPhone 14 Pro', 3200000)">Agregar al carrito</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card" data-product="iphone-13">
+                        <div class="product-image">
+                            <img src="https://res.cloudinary.com/dakyc9jir/image/upload/v1761538082/iphone_11_4_wwwn3f.jpg" alt="iPhone 13">
+                        </div>
+                        <div class="product-info">
+                            <h3>iPhone 13</h3>
+                            <p class="product-ref">Ref: IP13-128GB</p>
+                            <div class="product-features">
+                                <span>📱 Pantalla 6.1"</span>
+                                <span>💾 128GB</span>
+                                <span>📷 Cámara 12MP</span>
+                                <span>🎨 Color Azul</span>
+                            </div>
+                            <div class="product-price">$2,800,000</div>
+                            <button class="btn-add-cart" onclick="addToCart('iphone-13', 'iPhone 13', 2800000)">Agregar al carrito</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card" data-product="iphone-12">
+                        <div class="product-image">
+                            <img src="https://res.cloudinary.com/dakyc9jir/image/upload/v1761538082/iphone_11_4_wwwn3f.jpg" alt="iPhone 12">
+                        </div>
+                        <div class="product-info">
+                            <h3>iPhone 12</h3>
+                            <p class="product-ref">Ref: IP12-64GB</p>
+                            <div class="product-features">
+                                <span>📱 Pantalla 6.1"</span>
+                                <span>💾 64GB</span>
+                                <span>📷 Cámara 12MP</span>
+                                <span>🎨 Color Negro</span>
+                            </div>
+                            <div class="product-price">$2,200,000</div>
+                            <button class="btn-add-cart" onclick="addToCart('iphone-12', 'iPhone 12', 2200000)">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Catálogo de Accesorios -->
+            <div class="catalog-content" id="accesorios" style="display: none;">
+                <div class="products-grid">
+                    <div class="product-card" data-product="cargador-magsafe">
+                        <div class="product-image">
+                            <img src="https://picsum.photos/300/200?random=10" alt="Cargador MagSafe">
+                        </div>
+                        <div class="product-info">
+                            <h3>Cargador MagSafe</h3>
+                            <p class="product-ref">Ref: MGS-15W</p>
+                            <div class="product-features">
+                                <span>⚡ 15W de potencia</span>
+                                <span>🔋 Carga inalámbrica</span>
+                                <span>📱 Compatible iPhone 12+</span>
+                                <span>🔌 USB-C</span>
+                            </div>
+                            <div class="product-price">$180,000</div>
+                            <button class="btn-add-cart" onclick="addToCart('cargador-magsafe', 'Cargador MagSafe', 180000)">Agregar al carrito</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card" data-product="funda-silicona">
+                        <div class="product-image">
+                            <img src="https://picsum.photos/300/200?random=11" alt="Funda Silicona">
+                        </div>
+                        <div class="product-info">
+                            <h3>Funda Silicona Original</h3>
+                            <p class="product-ref">Ref: FS-IP15</p>
+                            <div class="product-features">
+                                <span>🛡️ Protección completa</span>
+                                <span>🎨 Varios colores</span>
+                                <span>📱 Compatible iPhone 15</span>
+                                <span>✨ Material premium</span>
+                            </div>
+                            <div class="product-price">$120,000</div>
+                            <button class="btn-add-cart" onclick="addToCart('funda-silicona', 'Funda Silicona Original', 120000)">Agregar al carrito</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card" data-product="airpods-pro">
+                        <div class="product-image">
+                            <img src="https://picsum.photos/300/200?random=12" alt="AirPods Pro">
+                        </div>
+                        <div class="product-info">
+                            <h3>AirPods Pro 2da Gen</h3>
+                            <p class="product-ref">Ref: APP2-CASE</p>
+                            <div class="product-features">
+                                <span>🎵 Cancelación ruido</span>
+                                <span>🔋 Hasta 6h batería</span>
+                                <span>📱 Compatible iOS</span>
+                                <span>💧 Resistente al agua</span>
+                            </div>
+                            <div class="product-price">$1,200,000</div>
+                            <button class="btn-add-cart" onclick="addToCart('airpods-pro', 'AirPods Pro 2da Gen', 1200000)">Agregar al carrito</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card" data-product="cable-lightning">
+                        <div class="product-image">
+                            <img src="https://picsum.photos/300/200?random=13" alt="Cable Lightning">
+                        </div>
+                        <div class="product-info">
+                            <h3>Cable Lightning USB-C</h3>
+                            <p class="product-ref">Ref: CL-1M</p>
+                            <div class="product-features">
+                                <span>🔌 Lightning a USB-C</span>
+                                <span>📏 1 metro</span>
+                                <span>⚡ Carga rápida</span>
+                                <span>📱 Compatible iPhone</span>
+                            </div>
+                            <div class="product-price">$45,000</div>
+                            <button class="btn-add-cart" onclick="addToCart('cable-lightning', 'Cable Lightning USB-C', 45000)">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal del Carrito -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h3>🛒 Tu Carrito de Compras</h3>
+                <button class="close-cart" id="closeCart">&times;</button>
+            </div>
+            
+            <div class="cart-items" id="cartItems">
+                <!-- Los productos del carrito se mostrarán aquí -->
+            </div>
+            
+            <div class="cart-total">
+                <div class="total-info">
+                    <span>Total: $<span id="cartTotal">0</span></span>
+                </div>
+            </div>
+            
+            <div class="cart-actions">
+                <button class="btn-secondary" id="clearCart">Vaciar Carrito</button>
+                <button class="btn-primary" id="checkoutBtn">Proceder al Pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Datos del Cliente -->
+    <div class="customer-modal" id="customerModal">
+        <div class="customer-content">
+            <div class="customer-header">
+                <h3>📋 Datos para el Pedido</h3>
+                <button class="close-customer" id="closeCustomer">&times;</button>
+            </div>
+            
+            <form id="customerForm">
+                <div class="form-group">
+                    <label for="customerName">Nombre completo *</label>
+                    <input type="text" id="customerName" name="customerName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerPhone">Número de teléfono *</label>
+                    <input type="tel" id="customerPhone" name="customerPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerAddress">Dirección de entrega (opcional)</label>
+                    <textarea id="customerAddress" name="customerAddress" rows="3" placeholder="Si deseas domicilio, ingresa tu dirección completa"></textarea>
+                </div>
+                
+                <div class="customer-actions">
+                    <button type="button" class="btn-secondary" id="backToCart">Volver al Carrito</button>
+                    <button type="submit" class="btn-primary">Enviar Pedido por WhatsApp</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sección Contacto -->
+    <section id="contacto" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Contáctanos</h2>
+                <p>Estamos aquí para ayudarte con tu dispositivo móvil</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="nombre">Nombre completo</label>
+                            <input type="text" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="correo">Correo electrónico</label>
+                            <input type="email" id="correo" name="correo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mensaje">Mensaje</label>
+                            <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">Enviar mensaje</button>
+                    </form>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <h3>📍 Ubicación</h3>
+                        <p>Calle 9 # 4-22<br>Centro Comercial El Palacio, Local 95<br>Cúcuta, Colombia</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>🕒 Horarios</h3>
+                        <p>Lunes a Sábado: 8:00 AM - 6:00 PM<br>Domingos: 9:00 AM - 1:00 PM</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>📱 Redes Sociales</h3>
+                        <div class="social-links">
+                            <a href="#" class="social-link">Instagram</a>
+                            <a href="#" class="social-link">Facebook</a>
+                            <a href="#" class="social-link">X (Twitter)</a>
+                            <a href="#" class="social-link">WhatsApp</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 El Ingeniero i-Fix – Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Enlace a nuestro archivo JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
