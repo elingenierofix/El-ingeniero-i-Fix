@@ -1,730 +1,783 @@
-/* ===========================================
-   EL INGENIERO I-FIX - JAVASCRIPT
-   Funcionalidades interactivas para la página web
-   =========================================== */
+// ===========================================
+// SCRIPT PARA EL INGENIERO I-FIX
+// ===========================================
 
-// Esperamos a que el DOM esté completamente cargado antes de ejecutar el código
+// Manejar el envío del formulario de contacto
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // ===========================================
-    // NAVEGACIÓN MÓVIL (MENÚ HAMBURGUESA)
-    // ===========================================
-    
-    // Obtenemos referencias a los elementos del menú móvil
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    // Función para alternar el menú móvil
-    function toggleMobileMenu() {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    }
-    
-    // Event listener para el botón hamburguesa
-    hamburger.addEventListener('click', toggleMobileMenu);
-    
-    // Cerrar el menú móvil cuando se hace clic en un enlace
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        });
-    });
-    
-    // Cerrar el menú móvil cuando se hace clic fuera de él
-    document.addEventListener('click', (e) => {
-        if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        }
-    });
-    
-    // ===========================================
-    // NAVEGACIÓN SUAVE ENTRE SECCIONES
-    // ===========================================
-    
-    // Función para hacer scroll suave a una sección específica
-    function smoothScrollTo(targetId) {
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-            // Calculamos la posición considerando el header fijo
-            const headerHeight = document.querySelector('.header').offsetHeight;
-            const targetPosition = targetElement.offsetTop - headerHeight;
-            
-            // Hacemos scroll suave hasta la posición calculada
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-        }
-    }
-    
-    // Agregamos event listeners a todos los enlaces de navegación
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevenimos el comportamiento por defecto del enlace
-            
-            const targetId = link.getAttribute('href');
-            smoothScrollTo(targetId);
-        });
-    });
-    
-    // ===========================================
-    // FORMULARIO DE CONTACTO
-    // ===========================================
-    
-    // Obtenemos referencia al formulario de contacto
     const contactForm = document.getElementById('contactForm');
     
-    // Función para validar el formulario
-    function validateForm(formData) {
-        const errors = [];
-        
-        // Validar nombre (debe tener al menos 2 caracteres)
-        if (!formData.nombre || formData.nombre.trim().length < 2) {
-            errors.push('El nombre debe tener al menos 2 caracteres');
-        }
-        
-        // Validar email (formato básico de email)
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!formData.correo || !emailRegex.test(formData.correo)) {
-            errors.push('Por favor ingresa un email válido');
-        }
-        
-        // Validar mensaje (debe tener al menos 10 caracteres)
-        if (!formData.mensaje || formData.mensaje.trim().length < 10) {
-            errors.push('El mensaje debe tener al menos 10 caracteres');
-        }
-        
-        return errors;
-    }
-    
-    // Función para mostrar mensajes de error o éxito
-    function showMessage(message, isError = false) {
-        // Removemos cualquier mensaje anterior
-        const existingMessage = document.querySelector('.form-message');
-        if (existingMessage) {
-            existingMessage.remove();
-        }
-        
-        // Creamos el nuevo mensaje
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `form-message ${isError ? 'error' : 'success'}`;
-        messageDiv.textContent = message;
-        
-        // Estilos para el mensaje
-        messageDiv.style.cssText = `
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            font-weight: 500;
-            text-align: center;
-            ${isError ? 
-                'background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;' : 
-                'background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;'
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(event) {
+            // Validar honeypot (campo anti-spam)
+            const honeypot = document.getElementById('website').value;
+            if (honeypot) {
+                console.log('Spam detectado');
+                event.preventDefault();
+                return false;
             }
-        `;
-        
-        // Insertamos el mensaje después del formulario
-        contactForm.parentNode.insertBefore(messageDiv, contactForm.nextSibling);
-        
-        // Removemos el mensaje después de 5 segundos
-        setTimeout(() => {
-            if (messageDiv.parentNode) {
-                messageDiv.remove();
+            
+            // Validación básica del lado del cliente
+            const nombre = document.getElementById('nombre').value.trim();
+            const correo = document.getElementById('correo').value.trim();
+            const asunto = document.getElementById('asunto').value;
+            const mensaje = document.getElementById('mensaje').value.trim();
+            const acepto = document.getElementById('acepto').checked;
+            
+            if (!nombre || !correo || !asunto || !mensaje || !acepto) {
+                event.preventDefault();
+                showNotification('Por favor, completa todos los campos obligatorios y acepta los términos.', 'error');
+                return false;
             }
-        }, 5000);
-    }
-    
-    // Función para limpiar el formulario
-    function clearForm() {
-        contactForm.reset();
-        
-        // Removemos cualquier clase de error de los campos
-        const inputs = contactForm.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            input.style.borderColor = '#E9ECEF';
+            
+            // Validar formato de email (más estricto)
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(correo)) {
+                event.preventDefault();
+                showNotification('Por favor, ingresa un correo electrónico válido (ejemplo: usuario@dominio.com).', 'error');
+                return false;
+            }
+            
+            // Validar que no tenga caracteres problemáticos
+            if (correo.includes(',') || correo.includes(';') || correo.includes(' ')) {
+                event.preventDefault();
+                showNotification('El correo electrónico no puede contener comas, puntos y comas o espacios. Ejemplo válido: usuario@dominio.com', 'error');
+                return false;
+            }
+            
+            // Configurar campos dinámicos de Formspree (sin comas)
+            const replytoField = document.getElementById('replyto-field');
+            if (replytoField) {
+                replytoField.value = correo.trim(); // Eliminar espacios y caracteres extra
+            }
+            
+            // Actualizar el campo _replyto en el formulario
+            const replytoInputs = contactForm.querySelectorAll('input[name="_replyto"]');
+            replytoInputs.forEach(input => {
+                input.value = correo.trim(); // Eliminar espacios y caracteres extra
+            });
+            
+            // Asegurar que el campo de email principal esté limpio
+            const emailField = document.getElementById('correo');
+            if (emailField) {
+                emailField.value = correo.trim(); // Limpiar el campo de email
+            }
+            
+            // Mostrar estado de carga
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoading = submitBtn.querySelector('.btn-loading');
+            
+            if (btnText && btnLoading) {
+                submitBtn.disabled = true;
+                btnText.style.display = 'none';
+                btnLoading.style.display = 'inline';
+            }
+            
+            // Intentar múltiples métodos de envío de email
+            attemptEmailSending(nombre, correo, asunto, mensaje, telefono);
+            
+            // Restaurar estado del botón después de un tiempo
+            setTimeout(() => {
+                if (btnText && btnLoading) {
+                    submitBtn.disabled = false;
+                    btnText.style.display = 'inline';
+                    btnLoading.style.display = 'none';
+                }
+            }, 5000);
         });
     }
+});
+
+// Función para probar la conectividad con Formspree
+function testFormspreeConnection() {
+    return fetch('https://formspree.io/f/mqagerbp', {
+        method: 'HEAD',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        console.log('Formspree connection test:', response.status);
+        console.log('Formspree headers:', response.headers);
+        return response.ok;
+    })
+    .catch(error => {
+        console.error('Formspree connection failed:', error);
+        return false;
+    });
+}
+
+// Función para enviar un mensaje de prueba a Formspree
+function testFormspreeSubmission() {
+    const testData = new FormData();
+    testData.append('nombre', 'Test Usuario');
+    testData.append('correo', 'test@example.com');
+    testData.append('asunto', 'Prueba de conexión');
+    testData.append('mensaje', 'Este es un mensaje de prueba para verificar la conectividad con Formspree.');
+    testData.append('_subject', '[El Ingeniero i-Fix] Mensaje de prueba');
+    testData.append('_captcha', 'false');
     
-    // Función para resaltar campos con error
-    function highlightErrors(errors, formData) {
-        const inputs = contactForm.querySelectorAll('input, textarea');
-        
-        // Primero limpiamos todos los estilos de error
-        inputs.forEach(input => {
-            input.style.borderColor = '#E9ECEF';
+    return fetch('https://formspree.io/f/mqagerbp', {
+        method: 'POST',
+        body: testData,
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        console.log('Formspree test submission:', response.status);
+        return response.ok;
+    })
+    .catch(error => {
+        console.error('Formspree test submission failed:', error);
+        return false;
+    });
+}
+
+// Función principal para intentar múltiples métodos de envío
+function attemptEmailSending(nombre, correo, asunto, mensaje, telefono) {
+    console.log('Iniciando envío de email...');
+    
+    // Método 1: Intentar EmailJS primero (más confiable)
+    sendViaEmailJS(nombre, correo, asunto, mensaje, telefono)
+        .then(success => {
+            if (success) {
+                handleEmailSuccess(nombre, asunto);
+            } else {
+                console.log('EmailJS falló, intentando Web3Forms...');
+                // Método 2: Intentar Web3Forms como respaldo
+                return sendViaWeb3Forms(nombre, correo, asunto, mensaje, telefono);
+            }
+        })
+        .then(success => {
+            if (success) {
+                handleEmailSuccess(nombre, asunto);
+            } else {
+                console.log('Web3Forms falló, intentando Formspree...');
+                // Método 3: Intentar Formspree como último recurso
+                return sendViaFormspree(nombre, correo, asunto, mensaje, telefono);
+            }
+        })
+        .then(success => {
+            if (success) {
+                handleEmailSuccess(nombre, asunto);
+            } else {
+                console.log('Todos los métodos de email fallaron, mostrando alternativa de WhatsApp...');
+                handleEmailFailure(nombre, correo, asunto, mensaje);
+            }
+        })
+        .catch(error => {
+            console.error('Error en el envío de email:', error);
+            handleEmailFailure(nombre, correo, asunto, mensaje);
         });
-        
-        // Luego resaltamos los campos con error
-        if (errors.includes('El nombre debe tener al menos 2 caracteres')) {
-            document.getElementById('nombre').style.borderColor = '#dc3545';
-        }
-        if (errors.includes('Por favor ingresa un email válido')) {
-            document.getElementById('correo').style.borderColor = '#dc3545';
-        }
-        if (errors.includes('El mensaje debe tener al menos 10 caracteres')) {
-            document.getElementById('mensaje').style.borderColor = '#dc3545';
-        }
-    }
+}
+
+// Función para enviar via Formspree (corregida)
+function sendViaFormspree(nombre, correo, asunto, mensaje, telefono) {
+    // Limpiar el email para evitar duplicados
+    const emailLimpio = correo.trim().replace(/[,;]/g, '');
     
-    // Event listener para el envío del formulario
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevenimos el envío por defecto del formulario
+    const formData = new FormData();
+    formData.append('name', nombre); // Cambiar a 'name' en lugar de 'nombre'
+    formData.append('email', emailLimpio); // Cambiar a 'email' en lugar de 'correo'
+    formData.append('subject', asunto); // Cambiar a 'subject' en lugar de 'asunto'
+    formData.append('message', mensaje); // Cambiar a 'message' en lugar de 'mensaje'
+    if (telefono) formData.append('phone', telefono); // Cambiar a 'phone' en lugar de 'telefono'
+    
+    // Campos especiales de Formspree
+    formData.append('_subject', `[El Ingeniero i-Fix] ${asunto} - ${nombre}`);
+    formData.append('_replyto', emailLimpio);
+    formData.append('_captcha', 'false');
+    formData.append('_template', 'table');
+    
+    return fetch('https://formspree.io/f/mqagerbp', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        console.log('Formspree response:', response.status);
+        if (response.ok) {
+            return true;
+        } else {
+            return response.text().then(text => {
+                console.error('Formspree error:', text);
+                return false;
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Formspree network error:', error);
+        return false;
+    });
+}
+
+// Función para enviar via EmailJS
+function sendViaEmailJS(nombre, correo, asunto, mensaje, telefono) {
+    return new Promise((resolve) => {
+        if (typeof emailjs === 'undefined') {
+            console.log('EmailJS no está disponible');
+            resolve(false);
+            return;
+        }
         
-        // Obtenemos los datos del formulario
-        const formData = {
-            nombre: document.getElementById('nombre').value,
-            correo: document.getElementById('correo').value,
-            mensaje: document.getElementById('mensaje').value
+        const templateParams = {
+            from_name: nombre,
+            from_email: correo,
+            subject: `[El Ingeniero i-Fix] ${asunto}`,
+            message: `Nombre: ${nombre}\nEmail: ${correo}\nTeléfono: ${telefono || 'No proporcionado'}\nAsunto: ${asunto}\n\nMensaje:\n${mensaje}`,
+            to_email: 'tu-email@dominio.com' // Reemplaza con tu email
         };
         
-        // Validamos el formulario
-        const errors = validateForm(formData);
-        
-        if (errors.length > 0) {
-            // Si hay errores, los mostramos y resaltamos los campos
-            showMessage(errors.join('. '), true);
-            highlightErrors(errors, formData);
-        } else {
-            // Si no hay errores, simulamos el envío exitoso
-            console.log('Formulario enviado correctamente');
-            console.log('Datos del formulario:', formData);
-            
-            // Mostramos mensaje de éxito
-            showMessage('¡Mensaje enviado correctamente! Te contactaremos pronto.', false);
-            
-            // Limpiamos el formulario
-            clearForm();
-        }
-    });
-    
-    // ===========================================
-    // EFECTOS DE SCROLL Y ANIMACIONES
-    // ===========================================
-    
-    // Función para agregar efecto de aparición gradual a los elementos
-    function addScrollAnimations() {
-        // Obtenemos todos los elementos que queremos animar
-        const animatedElements = document.querySelectorAll('.service-card, .project-card, .stat-item');
-        
-        // Creamos un observer para detectar cuando los elementos entran en el viewport
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // Agregamos la clase de animación cuando el elemento es visible
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
+        // Usar IDs de ejemplo - reemplaza con los tuyos
+        emailjs.send('service_1234567', 'template_abcdefg', templateParams)
+            .then(function(response) {
+                console.log('EmailJS success:', response.status, response.text);
+                resolve(true);
+            })
+            .catch(function(error) {
+                console.error('EmailJS error:', error);
+                resolve(false);
             });
-        }, {
-            threshold: 0.1, // El elemento debe estar al menos 10% visible
-            rootMargin: '0px 0px -50px 0px' // Margen adicional para activar la animación
-        });
-        
-        // Observamos cada elemento animado
-        animatedElements.forEach(element => {
-            // Establecemos el estado inicial (invisible y desplazado hacia abajo)
-            element.style.opacity = '0';
-            element.style.transform = 'translateY(30px)';
-            element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-            
-            observer.observe(element);
-        });
-    }
-    
-    // Ejecutamos las animaciones de scroll
-    addScrollAnimations();
-    
-    // ===========================================
-    // EFECTO DE HEADER AL HACER SCROLL
-    // ===========================================
-    
-    // Función para cambiar el estilo del header al hacer scroll
-    function handleScrollHeader() {
-        const header = document.querySelector('.header');
-        const scrollY = window.scrollY;
-        
-        if (scrollY > 100) {
-            // Agregamos una clase cuando el usuario ha hecho scroll
-            header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-            header.style.backdropFilter = 'blur(10px)';
-        } else {
-            // Removemos la clase cuando está en la parte superior
-            header.style.backgroundColor = '#FFFFFF';
-            header.style.backdropFilter = 'none';
-        }
-    }
-    
-    // Event listener para el scroll
-    window.addEventListener('scroll', handleScrollHeader);
-    
-    // ===========================================
-    // EFECTOS HOVER EN BOTONES DE PROYECTOS
-    // ===========================================
-    
-    // Agregamos efectos especiales a los botones "Ver más" de los proyectos
-    const projectButtons = document.querySelectorAll('.project-card .btn-secondary');
-    
-    projectButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            // Verificamos si es el botón del iPhone 15 Pro Max (que ya tiene onclick)
-            const projectTitle = this.closest('.project-card').querySelector('h3').textContent;
-            
-            if (projectTitle.includes('iPhone 15 Pro Max')) {
-                // Este botón ya tiene onclick para abrir YouTube, no necesitamos prevenir el comportamiento
-                return;
-            }
-            
-            e.preventDefault();
-            
-            // Para otros proyectos, mostramos un mensaje informativo
-            showMessage(`Próximamente: Más detalles sobre "${projectTitle}"`, false);
-        });
     });
+}
+
+// Función alternativa usando Web3Forms (más simple)
+function sendViaWeb3Forms(nombre, correo, asunto, mensaje, telefono) {
+    const formData = new FormData();
+    formData.append('access_key', 'YOUR_WEB3FORMS_KEY'); // Reemplaza con tu clave
+    formData.append('name', nombre);
+    formData.append('email', correo);
+    formData.append('subject', `[El Ingeniero i-Fix] ${asunto}`);
+    formData.append('message', `Nombre: ${nombre}\nEmail: ${correo}\nTeléfono: ${telefono || 'No proporcionado'}\nAsunto: ${asunto}\n\nMensaje:\n${mensaje}`);
+    if (telefono) formData.append('phone', telefono);
     
-    // ===========================================
-    // FUNCIONALIDAD ADICIONAL: CONTADOR ANIMADO
-    // ===========================================
-    
-    // Función para animar los números en las estadísticas
-    function animateCounters() {
-        const counters = document.querySelectorAll('.stat-item h3');
-        
-        counters.forEach(counter => {
-            const target = parseInt(counter.textContent.replace(/\D/g, '')); // Extraemos solo números
-            const suffix = counter.textContent.replace(/\d/g, ''); // Extraemos solo texto
-            
-            if (target > 0) {
-                let current = 0;
-                const increment = target / 50; // Animación en 50 pasos
-                
-                const timer = setInterval(() => {
-                    current += increment;
-                    if (current >= target) {
-                        current = target;
-                        clearInterval(timer);
-                    }
-                    counter.textContent = Math.floor(current) + suffix;
-                }, 30); // Actualizamos cada 30ms
-            }
-        });
-    }
-    
-    // Ejecutamos la animación de contadores cuando la sección de misión es visible
-    const missionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateCounters();
-                missionObserver.unobserve(entry.target); // Solo ejecutamos una vez
-            }
-        });
+    return fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        console.log('Web3Forms response:', response.status);
+        return response.ok;
+    })
+    .catch(error => {
+        console.error('Web3Forms error:', error);
+        return false;
     });
+}
+
+// Función para manejar éxito del envío
+function handleEmailSuccess(nombre, asunto) {
+    showNotification('¡Mensaje enviado exitosamente! Te contactaremos pronto.', 'success');
     
-    const missionSection = document.querySelector('.mission');
-    if (missionSection) {
-        missionObserver.observe(missionSection);
+    // Limpiar formulario
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.reset();
     }
     
-    // ===========================================
-    // MEJORAS DE ACCESIBILIDAD
-    // ===========================================
-    
-    // Agregamos soporte para navegación con teclado
-    document.addEventListener('keydown', function(e) {
-        // ESC para cerrar el menú móvil
-        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        }
-    });
-    
-    // Mejoramos el foco para usuarios que navegan con teclado
-    const focusableElements = document.querySelectorAll('a, button, input, textarea');
-    focusableElements.forEach(element => {
-        element.addEventListener('focus', function() {
-            this.style.outline = '2px solid #4A90E2';
-            this.style.outlineOffset = '2px';
-        });
+    // Mostrar alternativa de WhatsApp después de 3 segundos
+    setTimeout(() => {
+        const whatsappMessage = `Hola, envié un mensaje desde el sitio web sobre: ${asunto}`;
+        const whatsappUrl = `https://wa.me/573022197276?text=${encodeURIComponent(whatsappMessage)}`;
         
-        element.addEventListener('blur', function() {
-            this.style.outline = 'none';
-        });
-    });
-    
-    // ===========================================
-    // FUNCIONALIDAD DEL CATÁLOGO Y CARRITO
-    // ===========================================
-    
-    // Variables globales para el carrito
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const numeroWhatsApp = "+57 3022197276";
-    
-    // Función para formatear números con separadores de miles
-    function formatNumber(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-    
-    // Función para actualizar el contador del carrito
-    function updateCartCount() {
-        const cartCount = document.getElementById('cartCount');
-        if (cartCount) {
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCount.textContent = totalItems;
-        }
-    }
-    
-    // Función para mostrar notificación
-    function showNotification(message, type = 'success') {
-        // Remover notificación anterior si existe
-        const existingNotification = document.querySelector('.notification');
-        if (existingNotification) {
-            existingNotification.remove();
-        }
+        showNotification('¿Prefieres contactarnos por WhatsApp?', 'info');
         
-        // Crear nueva notificación
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
-        
-        document.body.appendChild(notification);
-        
-        // Mostrar notificación
+        // Crear enlace de WhatsApp
         setTimeout(() => {
-            notification.classList.add('show');
+            const whatsappNotification = document.createElement('div');
+            whatsappNotification.className = 'notification info whatsapp-alternative';
+            whatsappNotification.innerHTML = `
+                <div style="margin-bottom: 10px;">💬 Contacta por WhatsApp:</div>
+                <a href="${whatsappUrl}" target="_blank" style="color: white; text-decoration: underline; font-weight: bold;">
+                    Abrir WhatsApp
+                </a>
+            `;
+            
+            document.body.appendChild(whatsappNotification);
+            
+            setTimeout(() => {
+                whatsappNotification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                whatsappNotification.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(whatsappNotification)) {
+                        document.body.removeChild(whatsappNotification);
+                    }
+                }, 300);
+            }, 5000);
+        }, 1000);
+    }, 3000);
+}
+
+// Función para manejar fallo del envío
+function handleEmailFailure(nombre, correo, asunto, mensaje) {
+    showNotification('No pudimos enviar el email. Te redirigimos a WhatsApp.', 'error');
+    
+    // Crear mensaje para WhatsApp
+    const whatsappMessage = `Hola, soy ${nombre}.\n\nAsunto: ${asunto}\n\nMensaje: ${mensaje}\n\nEmail: ${correo}`;
+    const whatsappUrl = `https://wa.me/573022197276?text=${encodeURIComponent(whatsappMessage)}`;
+    
+    // Mostrar botón de WhatsApp inmediatamente
+    setTimeout(() => {
+        const whatsappBtn = document.createElement('div');
+        whatsappBtn.className = 'notification info whatsapp-fallback';
+        whatsappBtn.innerHTML = `
+            <div style="margin-bottom: 10px;">💬 Contacta por WhatsApp:</div>
+            <a href="${whatsappUrl}" target="_blank" style="color: white; text-decoration: underline; font-weight: bold;">
+                Abrir WhatsApp ahora
+            </a>
+        `;
+        
+        document.body.appendChild(whatsappBtn);
+        
+        setTimeout(() => {
+            whatsappBtn.classList.add('show');
         }, 100);
         
-        // Ocultar notificación después de 3 segundos
         setTimeout(() => {
-            notification.classList.remove('show');
+            whatsappBtn.classList.remove('show');
             setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.remove();
+                if (document.body.contains(whatsappBtn)) {
+                    document.body.removeChild(whatsappBtn);
                 }
             }, 300);
-        }, 3000);
+        }, 10000);
+    }, 2000);
+}
+
+// Función para mostrar notificaciones
+function showNotification(message, type = 'success') {
+    // Crear el elemento de notificación
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    // Agregar al body
+    document.body.appendChild(notification);
+    
+    // Mostrar con animación
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 100);
+    
+    // Ocultar y remover después de 3 segundos
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+// ===========================================
+// FUNCIONALIDAD DEL CARRITO DE COMPRAS
+// ===========================================
+
+let cart = [];
+let cartModal = null;
+let customerModal = null;
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Obtener referencias a los elementos
+    cartModal = document.getElementById('cartModal');
+    customerModal = document.getElementById('customerModal');
+    const cartIcon = document.getElementById('cartIcon');
+    const cartCount = document.getElementById('cartCount');
+    const closeCart = document.getElementById('closeCart');
+    const closeCustomer = document.getElementById('closeCustomer');
+    const clearCart = document.getElementById('clearCart');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const backToCart = document.getElementById('backToCart');
+    const customerForm = document.getElementById('customerForm');
+    
+    // Abrir modal del carrito
+    if (cartIcon) {
+        cartIcon.addEventListener('click', function() {
+            updateCartDisplay();
+            cartModal.classList.add('active');
+        });
     }
     
-    // Función para agregar producto al carrito
-    window.addToCart = function(productId, productName, price) {
-        console.log('Agregando producto:', productId, productName, price);
-        
-        const existingItem = cart.find(item => item.id === productId);
-        
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            cart.push({
-                id: productId,
-                name: productName,
-                price: price,
-                quantity: 1
-            });
-        }
-        
-        // Guardar en localStorage
-        localStorage.setItem('cart', JSON.stringify(cart));
-        
-        // Actualizar contador
-        updateCartCount();
-        
-        // Mostrar notificación
-        showNotification(`✅ ${productName} agregado al carrito`);
-        
-        console.log('Carrito actualizado:', cart);
-    };
-    
-    // Función para renderizar el carrito
-    function renderCart() {
-        const cartItems = document.getElementById('cartItems');
-        const cartTotal = document.getElementById('cartTotal');
-        
-        if (!cartItems || !cartTotal) {
-            console.error('Elementos del carrito no encontrados');
-            return;
-        }
-        
-        console.log('Renderizando carrito con', cart.length, 'productos');
-        
-        if (cart.length === 0) {
-            cartItems.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 2rem;">Tu carrito está vacío</p>';
-            cartTotal.textContent = '0';
-            return;
-        }
-        
-        cartItems.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <div class="cart-item-info">
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">$${formatNumber(item.price)} c/u</div>
-                </div>
-                <div class="cart-item-controls">
-                    <div class="quantity-controls">
-                        <button class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
-                        <span class="quantity">${item.quantity}</span>
-                        <button class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
-                    </div>
-                    <button class="remove-item" onclick="removeFromCart('${item.id}')" title="Eliminar">🗑️</button>
-                </div>
-                <div class="cart-item-total">$${formatNumber(item.price * item.quantity)}</div>
-            </div>
-        `).join('');
-        
-        // Calcular total
-        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        cartTotal.textContent = formatNumber(total);
+    // Cerrar modal del carrito
+    if (closeCart) {
+        closeCart.addEventListener('click', function() {
+            cartModal.classList.remove('active');
+        });
     }
     
-    // Función para actualizar cantidad de producto
-    window.updateQuantity = function(productId, change) {
-        console.log('Actualizando cantidad:', productId, change);
-        
-        const item = cart.find(item => item.id === productId);
-        if (item) {
-            item.quantity += change;
-            if (item.quantity <= 0) {
-                removeFromCart(productId);
+    // Cerrar modal del cliente
+    if (closeCustomer) {
+        closeCustomer.addEventListener('click', function() {
+            customerModal.classList.remove('active');
+        });
+    }
+    
+    // Volver al carrito
+    if (backToCart) {
+        backToCart.addEventListener('click', function() {
+            customerModal.classList.remove('active');
+            cartModal.classList.add('active');
+        });
+    }
+    
+    // Vaciar carrito
+    if (clearCart) {
+        clearCart.addEventListener('click', function() {
+            cart = [];
+            updateCartCount();
+            updateCartDisplay();
+            showNotification('Carrito vaciado', 'success');
+        });
+    }
+    
+    // Proceder al checkout
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', function() {
+            if (cart.length === 0) {
+                showNotification('El carrito está vacío', 'error');
+                return;
+            }
+            cartModal.classList.remove('active');
+            customerModal.classList.add('active');
+        });
+    }
+    
+    // Manejar envío del formulario del cliente
+    if (customerForm) {
+        customerForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('customerName').value;
+            const phone = document.getElementById('customerPhone').value;
+            const address = document.getElementById('customerAddress').value;
+            
+            if (!name || !phone) {
+                showNotification('Por favor, completa todos los campos obligatorios', 'error');
                 return;
             }
             
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
-            renderCart();
-        }
-    };
-    
-    // Función para eliminar producto del carrito
-    window.removeFromCart = function(productId) {
-        console.log('Eliminando producto:', productId);
-        
-        cart = cart.filter(item => item.id !== productId);
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount();
-        renderCart();
-        
-        showNotification('Producto eliminado del carrito', 'success');
-    };
-    
-    // Función para vaciar carrito
-    function clearCart() {
-        console.log('Vaciando carrito');
-        
-        cart = [];
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount();
-        renderCart();
-        
-        // Cerrar modal del carrito si está abierto
-        const cartModal = document.getElementById('cartModal');
-        if (cartModal && cartModal.classList.contains('active')) {
-            cartModal.classList.remove('active');
-        }
-        
-        showNotification('Carrito vaciado', 'success');
-    }
-    
-    // Función para generar mensaje de WhatsApp
-    function generateWhatsAppMessage(customerData) {
-        let message = `Hola 👋, quiero confirmar mi pedido desde la página web de El Ingeniero i-Fix.\n\n`;
-        message += `📋 *Datos del Cliente:*\n`;
-        message += `👤 Nombre: ${customerData.name}\n`;
-        message += `📞 Teléfono: ${customerData.phone}\n`;
-        if (customerData.address) {
-            message += `📍 Dirección: ${customerData.address}\n`;
-        }
-        
-        message += `\n🛒 *Productos Solicitados:*\n`;
-        cart.forEach(item => {
-            message += `• ${item.name} x${item.quantity} - $${formatNumber(item.price * item.quantity)}\n`;
-        });
-        
-        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        message += `\n💰 *Total: $${formatNumber(total)}*\n\n`;
-        message += `¡Espero tu confirmación! 😊`;
-        
-        return message;
-    }
-    
-    // Función para limpiar formulario de datos del cliente
-    function clearCustomerForm() {
-        const customerForm = document.getElementById('customerForm');
-        if (customerForm) {
+            // Generar mensaje de WhatsApp
+            let message = `Hola, me gustaría hacer un pedido:\n\n`;
+            
+            cart.forEach(item => {
+                message += `${item.quantity}x ${item.name} - $${item.price.toLocaleString()}\n`;
+            });
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            message += `\nTotal: $${total.toLocaleString()}\n\n`;
+            message += `Datos de contacto:\n`;
+            message += `Nombre: ${name}\n`;
+            message += `Teléfono: ${phone}\n`;
+            if (address) {
+                message += `Dirección: ${address}\n`;
+            }
+            
+            // Número de WhatsApp de El Ingeniero i-Fix
+            const whatsappNumber = '573022197276'; // Formato sin + y espacios
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            
+            // Abrir WhatsApp en nueva ventana
+            window.open(whatsappUrl, '_blank');
+            
+            // Limpiar formulario y carrito
             customerForm.reset();
-        }
-    }
-    
-    // Función para enviar pedido por WhatsApp
-    function sendToWhatsApp(customerData) {
-        const message = generateWhatsAppMessage(customerData);
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/${numeroWhatsApp.replace(/\D/g, '')}?text=${encodedMessage}`;
-        
-        window.open(whatsappUrl, '_blank');
-        
-        // Limpiar carrito y formulario después del envío
-        clearCart();
-        clearCustomerForm();
-        
-        // Cerrar modal de datos del cliente
-        const customerModal = document.getElementById('customerModal');
-        if (customerModal) {
+            cart = [];
+            updateCartCount();
+            
+            // Cerrar modales
             customerModal.classList.remove('active');
-        }
-        
-        showNotification('¡Pedido enviado por WhatsApp! 📱', 'success');
+            
+            // Mostrar notificación
+            showNotification('¡Pedido enviado por WhatsApp!', 'success');
+        });
+    }
+});
+
+// Función para agregar producto al carrito
+function addToCart(productId, productName, price) {
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity++;
+    } else {
+        cart.push({
+            id: productId,
+            name: productName,
+            price: price,
+            quantity: 1
+        });
     }
     
-    // Event listeners para el catálogo
-    function initializeCatalog() {
-        // Pestañas del catálogo
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        const catalogContents = document.querySelectorAll('.catalog-content');
+    updateCartCount();
+    showNotification('Producto agregado al carrito', 'success');
+}
+
+// Actualizar el contador del carrito
+function updateCartCount() {
+    const cartCount = document.getElementById('cartCount');
+    if (cartCount) {
+        const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = total;
+    }
+}
+
+// Actualizar la visualización del carrito
+function updateCartDisplay() {
+    const cartItems = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+    
+    if (cartItems) {
+        cartItems.innerHTML = '';
         
-        tabButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const category = this.getAttribute('data-category');
+        if (cart.length === 0) {
+            cartItems.innerHTML = '<p style="text-align: center; color: #6C757D; padding: 2rem;">El carrito está vacío</p>';
+        } else {
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
                 
-                // Actualizar botones activos
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
+                const itemTotal = item.price * item.quantity;
                 
-                // Mostrar contenido correspondiente
-                catalogContents.forEach(content => {
-                    content.style.display = 'none';
-                });
-                document.getElementById(category).style.display = 'block';
-            });
-        });
-        
-        // Modal del carrito
-        const cartIcon = document.getElementById('cartIcon');
-        const cartModal = document.getElementById('cartModal');
-        const closeCart = document.getElementById('closeCart');
-        const clearCartBtn = document.getElementById('clearCart');
-        const checkoutBtn = document.getElementById('checkoutBtn');
-        
-        if (cartIcon) {
-            cartIcon.addEventListener('click', function() {
-                renderCart();
-                cartModal.classList.add('active');
-            });
-        }
-        
-        if (closeCart) {
-            closeCart.addEventListener('click', function() {
-                cartModal.classList.remove('active');
-            });
-        }
-        
-        if (clearCartBtn) {
-            clearCartBtn.addEventListener('click', clearCart);
-        }
-        
-        if (checkoutBtn) {
-            checkoutBtn.addEventListener('click', function() {
-                if (cart.length === 0) {
-                    showNotification('Tu carrito está vacío', 'error');
-                    return;
-                }
+                cartItem.innerHTML = `
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">$${item.price.toLocaleString()} c/u</div>
+                    </div>
+                    <div class="cart-item-controls">
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="decreaseQuantity('${item.id}')">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="increaseQuantity('${item.id}')">+</button>
+                        </div>
+                        <button class="remove-item" onclick="removeFromCart('${item.id}')">🗑️</button>
+                    </div>
+                    <div class="cart-item-total">$${itemTotal.toLocaleString()}</div>
+                `;
                 
-                cartModal.classList.remove('active');
-                document.getElementById('customerModal').classList.add('active');
+                cartItems.appendChild(cartItem);
             });
         }
-        
-        // Modal de datos del cliente
-        const customerModal = document.getElementById('customerModal');
-        const closeCustomer = document.getElementById('closeCustomer');
-        const backToCart = document.getElementById('backToCart');
-        const customerForm = document.getElementById('customerForm');
-        
-        if (closeCustomer) {
-            closeCustomer.addEventListener('click', function() {
-                customerModal.classList.remove('active');
-            });
-        }
-        
-        if (backToCart) {
-            backToCart.addEventListener('click', function() {
-                customerModal.classList.remove('active');
-                cartModal.classList.add('active');
-            });
-        }
-        
-        if (customerForm) {
-            customerForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const customerData = {
-                    name: document.getElementById('customerName').value,
-                    phone: document.getElementById('customerPhone').value,
-                    address: document.getElementById('customerAddress').value
-                };
-                
-                // Validar campos obligatorios
-                if (!customerData.name.trim() || !customerData.phone.trim()) {
-                    showNotification('Por favor completa todos los campos obligatorios', 'error');
-                    return;
-                }
-                
-                sendToWhatsApp(customerData);
-            });
-        }
-        
-        // Cerrar modales al hacer clic fuera
-        if (cartModal) {
-            cartModal.addEventListener('click', function(e) {
-                if (e.target === cartModal) {
-                    cartModal.classList.remove('active');
-                }
-            });
-        }
-        
-        if (customerModal) {
-            customerModal.addEventListener('click', function(e) {
-                if (e.target === customerModal) {
-                    customerModal.classList.remove('active');
-                }
-            });
-        }
-        
-        // Inicializar contador del carrito
+    }
+    
+    if (cartTotal) {
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        cartTotal.textContent = total.toLocaleString();
+    }
+}
+
+// Aumentar cantidad de un producto
+function increaseQuantity(productId) {
+    const item = cart.find(item => item.id === productId);
+    if (item) {
+        item.quantity++;
+        updateCartDisplay();
         updateCartCount();
     }
+}
+
+// Disminuir cantidad de un producto
+function decreaseQuantity(productId) {
+    const item = cart.find(item => item.id === productId);
+    if (item) {
+        if (item.quantity > 1) {
+            item.quantity--;
+        } else {
+            cart = cart.filter(item => item.id !== productId);
+        }
+        updateCartDisplay();
+        updateCartCount();
+    }
+}
+
+// Remover producto del carrito
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    updateCartDisplay();
+    updateCartCount();
+    showNotification('Producto eliminado del carrito', 'success');
+}
+
+// ===========================================
+// PESTAÑAS DEL CATÁLOGO
+// ===========================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
     
-    // Inicializar catálogo cuando el DOM esté listo
-    initializeCatalog();
-    
-    // ===========================================
-    // INICIALIZACIÓN COMPLETA
-    // ===========================================
-    
-    console.log('🚀 El Ingeniero i-Fix - Página web cargada correctamente');
-    console.log('📱 Especialistas en reparación de celulares desde Cúcuta, Colombia');
-    console.log('🛒 Sistema de catálogo y carrito implementado');
-    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const category = this.getAttribute('data-category');
+            
+            // Remover clase active de todos los botones
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Agregar clase active al botón clickeado
+            this.classList.add('active');
+            
+            // Mostrar/ocultar contenido según la categoría
+            const catalogs = document.querySelectorAll('.catalog-content');
+            catalogs.forEach(catalog => {
+                if (catalog.id === category) {
+                    catalog.style.display = 'block';
+                } else {
+                    catalog.style.display = 'none';
+                }
+            });
+        });
+    });
 });
 
 // ===========================================
-// FUNCIONES UTILITARIAS GLOBALES
+// NAVEGACIÓN MÓVIL (HAMBURGUESA)
 // ===========================================
 
-// Función para mostrar información de contacto en consola (para desarrolladores)
-function showContactInfo() {
-    console.log('📞 El Ingeniero i-Fix');
-    console.log('📍 Calle 9 # 4-22, Centro Comercial El Palacio, Local 95, Cúcuta');
-    console.log('🕒 Lun-Sáb: 8:00 AM - 6:00 PM | Dom: 9:00 AM - 1:00 PM');
-    console.log('💬 WhatsApp: Disponible en horario de atención');
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+        
+        // Cerrar el menú cuando se hace clic en un enlace
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    }
+});
+
+// ===========================================
+// INFORMACIÓN PARA EL CHATBOT
+// ===========================================
+
+// Función para proporcionar información de contacto al chatbot
+function getContactInfo() {
+    return {
+        whatsapp: '+57 302 219 7276',
+        whatsappLink: 'https://wa.me/573022197276',
+        location: 'Calle 9 # 4-22, Centro Comercial El Palacio, Local 95, Cúcuta',
+        schedule: 'Lun-Sáb: 8:00 AM - 6:00 PM | Dom: 9:00 AM - 1:00 PM',
+        services: [
+            'Reparación de pantallas',
+            'Reparación de placas',
+            'Especialización iPhone',
+            'Servicio Express',
+            'Venta de accesorios',
+            'Diagnóstico técnico'
+        ]
+    };
 }
 
-// Función para validar si un email es válido (función auxiliar)
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+// Hacer la información disponible globalmente para el chatbot
+window.ElIngenieroIFixInfo = getContactInfo();
+
+// Función de diagnóstico para el formulario
+function diagnoseFormIssue() {
+    console.log('=== DIAGNÓSTICO DEL FORMULARIO ===');
+    
+    // Verificar elementos del formulario
+    const form = document.getElementById('contactForm');
+    const nombre = document.getElementById('nombre');
+    const correo = document.getElementById('correo');
+    const asunto = document.getElementById('asunto');
+    const mensaje = document.getElementById('mensaje');
+    const acepto = document.getElementById('acepto');
+    
+    console.log('Formulario encontrado:', !!form);
+    console.log('Campo nombre:', !!nombre);
+    console.log('Campo correo:', !!correo);
+    console.log('Campo asunto:', !!asunto);
+    console.log('Campo mensaje:', !!mensaje);
+    console.log('Checkbox acepto:', !!acepto);
+    
+    // Probar conectividad con Formspree
+    testFormspreeConnection().then(isConnected => {
+        console.log('Formspree conectado:', isConnected);
+        
+        if (!isConnected) {
+            showNotification('⚠️ Problema de conectividad con Formspree detectado. Usa WhatsApp como alternativa.', 'error');
+        } else {
+            console.log('✅ Formspree está funcionando correctamente');
+            
+            // Probar envío de formulario (opcional)
+            if (confirm('¿Quieres probar el envío de un mensaje de prueba a Formspree?')) {
+                testFormspreeSubmission().then(success => {
+                    if (success) {
+                        showNotification('✅ Prueba de Formspree exitosa. El formulario está funcionando.', 'success');
+                    } else {
+                        showNotification('❌ Prueba de Formspree falló. Revisa la configuración.', 'error');
+                    }
+                });
+            }
+        }
+    });
+    
+    // Verificar configuración de Formspree
+    console.log('URL Formspree:', 'https://formspree.io/f/mqagerbp');
+    console.log('Configuración del formulario:');
+    console.log('- Action:', document.getElementById('contactForm')?.action);
+    console.log('- Method:', document.getElementById('contactForm')?.method);
+    console.log('- Enctype:', document.getElementById('contactForm')?.enctype);
+    console.log('=== FIN DIAGNÓSTICO ===');
 }
 
-// Función para formatear texto (función auxiliar)
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+// Ejecutar diagnóstico al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(diagnoseFormIssue, 2000);
+    
+    // Verificar si hay parámetros de éxito en la URL (después del envío de Formspree)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true' || window.location.hash === '#success') {
+        showSuccessMessage();
+    }
+    
+    // Limpiar automáticamente el campo de email
+    const emailField = document.getElementById('correo');
+    if (emailField) {
+        emailField.addEventListener('input', function() {
+            // Eliminar caracteres problemáticos mientras el usuario escribe
+            let value = this.value;
+            value = value.replace(/[,;]/g, ''); // Eliminar comas y puntos y comas
+            value = value.trim(); // Eliminar espacios al inicio y final
+            
+            if (value !== this.value) {
+                this.value = value;
+                showNotification('Se eliminaron caracteres no válidos del email.', 'info');
+            }
+        });
+        
+        emailField.addEventListener('blur', function() {
+            // Limpiar al salir del campo
+            this.value = this.value.trim();
+        });
+    }
+});
+
+// Función para mostrar mensaje de éxito
+function showSuccessMessage() {
+    const successMessage = document.getElementById('successMessage');
+    const contactForm = document.getElementById('contactForm');
+    
+    if (successMessage && contactForm) {
+        contactForm.style.display = 'none';
+        successMessage.style.display = 'block';
+        
+        // Scroll suave hacia el mensaje
+        successMessage.scrollIntoView({ behavior: 'smooth' });
+        
+        // Mostrar notificación adicional
+        showNotification('¡Mensaje enviado exitosamente!', 'success');
+    }
 }

@@ -58,6 +58,10 @@
                         <span class="info-label">🕒 Horario:</span>
                         <span>Lun-Sáb: 8:00 AM - 6:00 PM | Dom: 9:00 AM - 1:00 PM</span>
                     </div>
+                    <div class="info-item">
+                        <span class="info-label">📱 WhatsApp:</span>
+                        <span><a href="https://wa.me/573022197276?text=Hola👋,+quiero+más+información+sobre+iPhone+o+reparaciones" target="_blank" style="color: #25D366; text-decoration: none; font-weight: 600;">+57 302 219 7276</a></span>
+                    </div>
                 </div>
                 <a href="#contacto" class="btn-primary">Contáctanos</a>
             </div>
@@ -436,22 +440,97 @@
                 <h2>Contáctanos</h2>
                 <p>Estamos aquí para ayudarte con tu dispositivo móvil</p>
             </div>
+            
+            <!-- Mensaje de confirmación (oculto por defecto) -->
+            <div id="successMessage" class="success-message" style="display: none;">
+                <div class="success-content">
+                    <h3>✅ ¡Mensaje enviado exitosamente!</h3>
+                    <p>Gracias por contactarnos. Te responderemos pronto.</p>
+                    <p>Mientras tanto, puedes contactarnos por WhatsApp:</p>
+                    <a href="https://wa.me/573022197276?text=Hola👋,+quiero+más+información+sobre+iPhone+o+reparaciones" target="_blank" class="btn-whatsapp">
+                        💬 Contactar por WhatsApp
+                    </a>
+                </div>
+            </div>
             <div class="contact-content">
                 <div class="contact-form">
-                    <form id="contactForm">
+                    <form id="contactForm" action="https://formspree.io/f/mqagerbp" method="POST" enctype="multipart/form-data">
+                        <!-- Configuración optimizada para Formspree -->
+                        <input type="hidden" name="_subject" value="[El Ingeniero i-Fix] Nuevo mensaje de contacto">
+                        <input type="hidden" name="_next" value="?success=true#contacto">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_template" value="table">
+                        <input type="hidden" name="_format" value="plain">
+                        <input type="hidden" name="_cc" value="">
+                        <input type="hidden" name="_replyto" value="">
+                        
                         <div class="form-group">
-                            <label for="nombre">Nombre completo</label>
-                            <input type="text" id="nombre" name="nombre" required>
+                            <label for="nombre">Nombre completo *</label>
+                            <input type="text" id="nombre" name="name" required minlength="2" maxlength="50" placeholder="Tu nombre completo">
                         </div>
+                        
                         <div class="form-group">
-                            <label for="correo">Correo electrónico</label>
-                            <input type="email" id="correo" name="correo" required>
+                            <label for="correo">Correo electrónico *</label>
+                            <input type="email" id="correo" name="email" required placeholder="tu@email.com" autocomplete="email" spellcheck="false">
+                            <!-- Campo oculto para configurar _replyto dinámicamente -->
+                            <input type="hidden" id="replyto-field" name="_replyto" value="">
+                            <small class="form-help">Ingresa solo el email sin comas, espacios o caracteres especiales</small>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="mensaje">Mensaje</label>
-                            <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+                            <label for="telefono">Número de teléfono</label>
+                            <input type="tel" id="telefono" name="phone" placeholder="+57 300 000 0000">
                         </div>
-                        <button type="submit" class="btn-primary">Enviar mensaje</button>
+                        
+                        <div class="form-group">
+                            <label for="asunto">Asunto *</label>
+                            <select id="asunto" name="subject" required>
+                                <option value="">Selecciona un asunto</option>
+                                <option value="Consulta general">Consulta general</option>
+                                <option value="Reparación de pantalla">Reparación de pantalla</option>
+                                <option value="Reparación de placa">Reparación de placa</option>
+                                <option value="Servicio iPhone">Servicio iPhone</option>
+                                <option value="Venta de accesorios">Venta de accesorios</option>
+                                <option value="Diagnóstico técnico">Diagnóstico técnico</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mensaje">Mensaje *</label>
+                            <textarea id="mensaje" name="message" rows="5" required minlength="10" maxlength="1000" placeholder="Describe tu consulta o problema con el dispositivo móvil..."></textarea>
+                        </div>
+                        
+                        <!-- Campo honeypot para detectar bots -->
+                        <div class="honeypot">
+                            <label for="website">Website (no llenar):</label>
+                            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="acepto" name="acepto" required>
+                                <span class="checkmark"></span>
+                                Acepto que mis datos sean utilizados para responder mi consulta *
+                            </label>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary" id="submitBtn">
+                                <span class="btn-text">📧 Enviar por Email</span>
+                                <span class="btn-loading" style="display: none;">Enviando...</span>
+                            </button>
+                            
+                            <div class="form-divider">
+                                <span>o</span>
+                            </div>
+                            
+                            <button type="button" class="btn-whatsapp-form" id="sendToWhatsApp">
+                                💬 Enviar por WhatsApp
+                            </button>
+                            
+                            <small class="form-note">💡 Email es el método principal de contacto</small>
+                        </div>
                     </form>
                 </div>
                 <div class="contact-info">
@@ -464,12 +543,21 @@
                         <p>Lunes a Sábado: 8:00 AM - 6:00 PM<br>Domingos: 9:00 AM - 1:00 PM</p>
                     </div>
                     <div class="contact-item">
+                        <h3>📱 WhatsApp</h3>
+                        <p>Puedes escribirnos por WhatsApp al <strong>+57 302 219 7276</strong> o hacer clic aquí 👉</p>
+                        <div class="whatsapp-link">
+                            <a href="https://wa.me/573022197276?text=Hola👋,+quiero+más+información+sobre+iPhone+o+reparaciones" target="_blank" class="btn-whatsapp">
+                                💬 Chatear por WhatsApp
+                            </a>
+                        </div>
+                        <p style="margin-top: 1rem; font-style: italic;">Estamos aquí para ayudarte. 😊</p>
+                    </div>
+                    <div class="contact-item">
                         <h3>📱 Redes Sociales</h3>
                         <div class="social-links">
                             <a href="#" class="social-link">Instagram</a>
                             <a href="#" class="social-link">Facebook</a>
                             <a href="#" class="social-link">X (Twitter)</a>
-                            <a href="#" class="social-link">WhatsApp</a>
                         </div>
                     </div>
                 </div>
@@ -484,7 +572,52 @@
         </div>
     </footer>
 
+    <!-- Botón flotante de WhatsApp -->
+    <div class="whatsapp-float">
+        <a href="https://wa.me/573022197276?text=Hola👋,+quiero+más+información+sobre+iPhone+o+reparaciones" target="_blank" class="whatsapp-btn">
+            <span class="whatsapp-icon">💬</span>
+            <span class="whatsapp-text">WhatsApp</span>
+        </a>
+    </div>
+
     <!-- Enlace a nuestro archivo JavaScript -->
     <script src="script.js"></script>
+    
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    
+    <!-- Información de contacto para el chatbot -->
+    <script>
+    // Datos de contacto de El Ingeniero i-Fix para el chatbot
+    window.ElIngenieroIFixContact = {
+        whatsapp: '+57 302 219 7276',
+        whatsappNumber: '573022197276',
+        whatsappLink: 'https://wa.me/573022197276?text=Hola👋,+quiero+más+información+sobre+iPhone+o+reparaciones',
+        location: 'Calle 9 # 4-22, Centro Comercial El Palacio, Local 95, Cúcuta',
+        schedule: 'Lunes a Sábado: 8:00 AM - 6:00 PM, Domingos: 9:00 AM - 1:00 PM',
+        services: [
+            'Reparación de pantallas para todas las marcas',
+            'Reparación de placas madre',
+            'Especialización en iPhone y productos Apple',
+            'Servicio Express para emergencias',
+            'Venta de accesorios originales',
+            'Diagnóstico técnico gratuito'
+        ],
+        experience: 'Más de 10 años de experiencia en telefonía',
+        specialization: 'Especializados en reparación y venta de celulares de todas las marcas, con enfoque especial en productos Apple'
+    };
+    
+    // Configuración de EmailJS
+    (function() {
+        // Reemplaza con tu clave pública de EmailJS
+        // Para obtenerla: https://www.emailjs.com
+        emailjs.init("user_1234567890abcdef"); // Ejemplo - reemplaza con tu clave real
+    })();
+    </script>
+
+    <!-- Chatbase Chatbot -->
+    <script>
+    (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="jsT5FxlARpRXmH-oWoR_r";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+    </script>
 </body>
 </html>
